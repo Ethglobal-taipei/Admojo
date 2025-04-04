@@ -13,18 +13,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-          
-      - name: Configure Git
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          # Configure pull strategy globally to merge
-          git config --global pull.rebase false
-          
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Update submodules
         run: |
+          # Configure git credentials
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          
+          # Set merge strategy globally
+          git config --global pull.rebase false
+          
           # For each submodule, pull the latest commit from the 'main' branch
-          git submodule foreach 'git pull origin main || echo "Pull failed, continuing..."'
+          git submodule foreach 'git config pull.rebase false && git pull origin main || echo "Pull failed for this submodule, continuing..."'
           
           # Stage any updated submodule pointers
           git add .
