@@ -1,0 +1,31 @@
+name: Update Submodules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *' # Runs every 2 hours
+
+jobs:
+  update_submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Update submodules
+        run: |
+          # For each submodule, pull the latest commit from the 'main' branch
+          git submodule foreach 'git pull origin main'
+          # Stage any updated submodule pointers
+          git add .
+          # If there are changes, configure git and commit them
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.email "action@github.com"
+            git config --global user.name "GitHub Action"
+            git commit -m "chore: Update submodule pointers"
+            git push origin HEAD:main
+          else
+            echo "No updates in submodules."
+          fi
