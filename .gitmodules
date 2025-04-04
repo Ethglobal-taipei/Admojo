@@ -1,0 +1,6 @@
+[submodule "submodules/Admojo-web"]
+	path = submodules/Admojo-web
+	url = https://github.com/Ethglobal-taipei/Admojo-web.git
+[submodule "submodules/Admojo-module"]
+	path = submodules/Admojo-module
+	url = https://github.com/Ethglobal-taipei/Admojo-module.git
